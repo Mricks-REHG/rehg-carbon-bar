@@ -85,14 +85,20 @@
       box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.22);
     }
     .tab-btn-active {
-      background: linear-gradient(180deg, rgba(212, 175, 55, 0.24) 0%, rgba(146, 112, 23, 0.36) 100%);
+      background: rgba(212, 175, 55, 0.15) !important;
       border-color: #D4AF37 !important;
       color: #FFFFFF !important;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.20);
+      box-shadow: inset 0 1px 0 rgba(253, 230, 138, 0.18), 0 0 16px rgba(212, 175, 55, 0.14);
     }
-    .pin-capsule-glow {
-      border: 1px solid rgba(212, 175, 55, 0.65);
-      box-shadow: 0 0 28px rgba(212, 175, 55, 0.18), inset 0 0 14px rgba(212, 175, 55, 0.08);
+    @keyframes pinShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-7px); }
+      40%, 80% { transform: translateX(7px); }
+    }
+    .pin-pill-shake {
+      animation: pinShake 0.32s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      border-color: rgba(239, 68, 68, 0.85) !important;
+      box-shadow: 0 0 22px rgba(239, 68, 68, 0.28) !important;
     }
     input[type="range"] { accent-color: #D4AF37; }
     ::-webkit-scrollbar { width: 7px; height: 7px; }
@@ -119,17 +125,19 @@
   <!-- ========================================================================= -->
   <!-- FULL-SCREEN PIN GATE (PURE #050811 • ZERO DUPLICATE TEXT UNDER LOGO)      -->
   <!-- ========================================================================= -->
-  <div id="pin-gate-overlay" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-4 overflow-y-auto no-print">
+  <!-- ========================================================================= -->
+  <!-- FULL-SCREEN STEALTH PIN GATE (EXACT CARBON | LOSS VAULT STANDARD)         -->
+  <!-- ========================================================================= -->
+  <div id="pin-gate-overlay" onclick="focusGatePinInput()" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-4 select-none cursor-pointer no-print">
     <div class="w-full max-w-sm flex flex-col items-center">
       <img
         src="./carbon-bar-logo.jpeg"
         alt="REHG CARBON | BAR — BEVERAGE & POUR ENGINE"
         onerror="this.onerror=null;this.src='https://ruvyxmpokjdzkagbltac.supabase.co/storage/v1/object/public/brand-assets/carbon-bar-logo.jpeg';"
-        class="w-64 h-64 object-contain mx-auto select-none"
+        class="w-72 h-72 sm:w-80 sm:h-80 object-contain mx-auto select-none mix-blend-lighten pointer-events-none"
       />
 
-      <!-- Sleek Glowing Bourbon-Gold 4-Dot PIN Capsule Directly Underneath -->
-      <div onclick="focusGatePinInput()" class="mt-2 w-64 rounded-full bg-[#050811] pin-capsule-glow px-6 py-3.5 flex items-center justify-between cursor-pointer relative">
+      <div id="stealth-pin-pill" class="mt-3 w-44 h-12 rounded-full bg-[#0B101E]/90 border border-slate-800/90 focus-within:border-[#D4AF37]/60 focus-within:shadow-[0_0_24px_rgba(212,175,55,0.20)] flex items-center justify-center mx-auto transition-all">
         <input
           id="gate-pin-input"
           type="tel"
@@ -138,56 +146,28 @@
           autocomplete="one-time-code"
           data-lpignore="true"
           style="-webkit-text-security: disc;"
+          placeholder="•  •  •  •"
           oninput="handleGatePinInput(this)"
-          class="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+          class="w-full h-full bg-transparent text-center font-mono text-lg tracking-[0.45em] pl-[0.45em] text-[#D4AF37] placeholder-slate-600 focus:outline-none"
           aria-label="4-Digit Governance PIN"
         />
-        <div id="pin-dot-0" class="w-3.5 h-3.5 rounded-full bg-titanium/60 transition-all"></div>
-        <div id="pin-dot-1" class="w-3.5 h-3.5 rounded-full bg-titanium/60 transition-all"></div>
-        <div id="pin-dot-2" class="w-3.5 h-3.5 rounded-full bg-titanium/60 transition-all"></div>
-        <div id="pin-dot-3" class="w-3.5 h-3.5 rounded-full bg-titanium/60 transition-all"></div>
-      </div>
-
-      <div id="pin-error-msg" class="h-5 mt-2 text-[11px] font-mono font-bold text-crimson uppercase tracking-widest opacity-0 transition-opacity">
-        INVALID GOVERNANCE PIN
-      </div>
-
-      <!-- Tactile Titanium / Bourbon-Gold Keypad -->
-      <div class="w-64 grid grid-cols-3 gap-2.5 mt-2">
-        <button type="button" onclick="pressPinDigit('1')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">1</button>
-        <button type="button" onclick="pressPinDigit('2')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">2</button>
-        <button type="button" onclick="pressPinDigit('3')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">3</button>
-        <button type="button" onclick="pressPinDigit('4')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">4</button>
-        <button type="button" onclick="pressPinDigit('5')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">5</button>
-        <button type="button" onclick="pressPinDigit('6')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">6</button>
-        <button type="button" onclick="pressPinDigit('7')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">7</button>
-        <button type="button" onclick="pressPinDigit('8')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">8</button>
-        <button type="button" onclick="pressPinDigit('9')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">9</button>
-        <button type="button" onclick="clearPinDigits()" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-crimson/20 border border-titanium text-xs font-mono font-bold text-slate-400 hover:text-white uppercase transition">CLR</button>
-        <button type="button" onclick="pressPinDigit('0')" class="py-3 rounded-xl bg-gunmetal/90 hover:bg-slatepanel border border-titanium hover:border-bourbon text-base font-mono font-bold text-white transition active:scale-95">0</button>
-        <button type="button" onclick="submitPinGate()" class="py-3 rounded-xl bg-bourbon hover:bg-amber-400 border border-bourbon text-xs font-mono font-extrabold text-obsidian uppercase transition shadow-lg shadow-bourbon/20">GO</button>
-      </div>
-
-      <div class="w-64 mt-4 flex items-center justify-between text-[11px] font-mono text-slate-500">
-        <span>SCOPE: <strong id="gate-venue-pill" class="text-bourbon">CARBON_HQ</strong></span>
-        <button type="button" onclick="triggerPwaInstall()" class="text-slate-400 hover:text-bourbon transition">📲 Install App</button>
       </div>
     </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- TOP ENTERPRISE COMMAND HEADER & FLEX-WRAP NAVIGATION                      -->
+  <!-- TOP ENTERPRISE COMMAND HEADER & FULL-WIDTH ARCHITECTURAL COMMAND RAIL     -->
   <!-- ========================================================================= -->
   <header class="sticky top-0 z-40 bg-obsidian/95 backdrop-blur-md border-b border-titanium no-print">
     <div class="max-w-[1600px] mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Left: Locked Brand Asset + Wordmark -->
       <div class="flex items-center gap-3.5">
-        <div class="w-12 h-12 rounded-xl bg-obsidian border border-bourbon/40 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
+        <div class="w-12 h-12 rounded-lg bg-obsidian border border-bourbon/40 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
           <img
             src="./carbon-bar-logo.jpeg"
             alt="CARBON | BAR"
             onerror="this.onerror=null;this.src='https://ruvyxmpokjdzkagbltac.supabase.co/storage/v1/object/public/brand-assets/carbon-bar-logo.jpeg';"
-            class="w-full h-full object-contain"
+            class="w-full h-full object-contain mix-blend-lighten"
           />
         </div>
         <div>
@@ -195,7 +175,7 @@
             <span class="text-lg sm:text-xl font-extrabold tracking-wider titanium-wordmark">CARBON</span>
             <span class="text-slate-600 font-light text-lg">|</span>
             <span class="text-lg sm:text-xl font-extrabold tracking-wider bourbon-wordmark">BAR</span>
-            <span id="role-badge" class="ml-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-bourbon/15 text-bourbon border border-bourbon/40">
+            <span id="role-badge" class="ml-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-bourbon/15 text-bourbon border border-bourbon/40">
               SOVEREIGN OWNER
             </span>
           </div>
@@ -213,57 +193,57 @@
 
       <!-- Center: Dual-Mode Ingestion Switch -->
       <div class="flex flex-wrap items-center gap-2">
-        <div class="inline-flex flex-wrap rounded-xl bg-gunmetal p-1 border border-titanium">
-          <button id="mode-btn-live" type="button" onclick="setIngestionMode('CARBON_POS_LIVE')" class="px-3 py-1.5 rounded-lg text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow">
+        <div class="inline-flex flex-wrap rounded-lg bg-[#0B101E] p-1 border border-slate-800/90">
+          <button id="mode-btn-live" type="button" onclick="setIngestionMode('CARBON_POS_LIVE')" class="px-3 py-1.5 rounded-md text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow">
             ⚡ CARBON POS LIVE AUTOPILOT
           </button>
-          <button id="mode-btn-csv" type="button" onclick="setIngestionMode('EXTERNAL_CSV')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white">
+          <button id="mode-btn-csv" type="button" onclick="setIngestionMode('EXTERNAL_CSV')" class="px-3 py-1.5 rounded-md text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white">
             📂 STANDALONE / CSV BRIDGE
           </button>
         </div>
       </div>
 
-      <!-- Right: Sync, Install, Vault Jump, Lock Out -->
+      <!-- Right: Machined Utility Buttons -->
       <div class="flex flex-wrap items-center gap-2">
-        <button type="button" onclick="refreshAllData(true)" class="px-3 py-1.5 rounded-xl bg-gunmetal hover:bg-slatepanel border border-titanium hover:border-bourbon text-slate-200 text-xs font-semibold transition">
+        <button type="button" onclick="refreshAllData(true)" class="px-3 py-1.5 rounded-lg bg-[#0B101E] hover:bg-slatepanel border border-titanium hover:border-bourbon text-slate-200 text-xs font-semibold transition">
           🔄 Sync Core
         </button>
-        <button type="button" onclick="triggerPwaInstall()" class="px-3 py-1.5 rounded-xl bg-gunmetal hover:bg-slatepanel border border-titanium hover:border-bourbon text-slate-200 text-xs font-semibold transition">
+        <button type="button" onclick="triggerPwaInstall()" class="px-3 py-1.5 rounded-lg bg-[#0B101E] hover:bg-slatepanel border border-titanium hover:border-bourbon text-slate-200 text-xs font-semibold transition">
           📲 Install
         </button>
-        <button type="button" onclick="switchTab('tab-5')" class="px-3 py-1.5 rounded-xl bg-gunmetal hover:bg-slatepanel border border-bourbon/40 text-bourbon text-xs font-semibold transition">
+        <button type="button" onclick="switchTab('tab-5')" class="px-3 py-1.5 rounded-lg bg-[#0B101E] hover:bg-slatepanel border border-bourbon/40 text-bourbon text-xs font-semibold transition">
           ⚙️ Vault Config
         </button>
-        <button type="button" onclick="lockSession()" class="px-3 py-1.5 rounded-xl bg-crimson/20 hover:bg-crimson border border-crimson text-white text-xs font-bold transition">
+        <button type="button" onclick="lockSession()" class="px-3 py-1.5 rounded-lg bg-crimson/20 hover:bg-crimson border border-crimson text-white text-xs font-bold transition">
           🔒 Lock Out
         </button>
       </div>
     </div>
 
-    <!-- FLEX-WRAP 5-TAB BAR (ZERO HORIZONTAL CLIPPING) -->
+    <!-- FULL-WIDTH 5-COLUMN SEGMENTED TITANIUM COMMAND RAIL -->
     <nav class="max-w-[1600px] mx-auto px-3 sm:px-6 pb-3 pt-1">
-      <div class="flex flex-wrap items-center gap-2">
-        <button id="nav-tab-1" type="button" data-tab="tab-1" onclick="switchTab('tab-1')" class="bar-tab-btn tab-btn-active px-3.5 py-2 rounded-xl border border-titanium bg-gunmetal text-xs font-bold tracking-wide text-slate-300 hover:text-white transition flex items-center gap-2">
-          <span class="font-mono text-[11px] text-bourbon font-extrabold">01</span>
-          <span>Beverage C-Suite & Real-Time P&L</span>
+      <div class="w-full grid grid-cols-2 lg:grid-cols-5 gap-1.5 p-1.5 bg-[#0B101E]/95 border border-slate-800/80 rounded-xl">
+        <button id="nav-tab-1" type="button" data-tab="tab-1" onclick="switchTab('tab-1')" class="bar-tab-btn tab-btn-active w-full px-3 py-2.5 rounded-lg border border-transparent bg-obsidian/50 text-xs font-bold tracking-wide text-slate-300 hover:text-white hover:border-slate-700 transition flex items-center justify-center gap-2 text-center">
+          <span class="font-mono text-[11px] text-bourbon font-extrabold shrink-0">01</span>
+          <span class="truncate">Beverage C-Suite & P&L</span>
         </button>
-        <button id="nav-tab-2" type="button" data-tab="tab-2" onclick="switchTab('tab-2')" class="bar-tab-btn px-3.5 py-2 rounded-xl border border-titanium bg-gunmetal text-xs font-bold tracking-wide text-slate-300 hover:text-white transition flex items-center gap-2">
-          <span class="font-mono text-[11px] text-bourbon font-extrabold">02</span>
-          <span>Cocktail R&D Hub & Live POS Push</span>
-          <span id="badge-pending-rnd" class="hidden px-1.5 py-0.5 rounded-full bg-bourbon text-obsidian font-mono text-[10px] font-extrabold">0</span>
+        <button id="nav-tab-2" type="button" data-tab="tab-2" onclick="switchTab('tab-2')" class="bar-tab-btn w-full px-3 py-2.5 rounded-lg border border-transparent bg-obsidian/50 text-xs font-bold tracking-wide text-slate-300 hover:text-white hover:border-slate-700 transition flex items-center justify-center gap-2 text-center">
+          <span class="font-mono text-[11px] text-bourbon font-extrabold shrink-0">02</span>
+          <span class="truncate">Cocktail R&D & POS Push</span>
+          <span id="badge-pending-rnd" class="hidden px-1.5 py-0.5 rounded bg-bourbon text-obsidian font-mono text-[10px] font-extrabold shrink-0">0</span>
         </button>
-        <button id="nav-tab-3" type="button" data-tab="tab-3" onclick="switchTab('tab-3')" class="bar-tab-btn px-3.5 py-2 rounded-xl border border-titanium bg-gunmetal text-xs font-bold tracking-wide text-slate-300 hover:text-white transition flex items-center gap-2">
-          <span class="font-mono text-[11px] text-bourbon font-extrabold">03</span>
-          <span>Par Ordering, PO Gate & Price-Creep</span>
-          <span id="badge-pending-po" class="hidden px-1.5 py-0.5 rounded-full bg-crimson text-white font-mono text-[10px] font-extrabold">0</span>
+        <button id="nav-tab-3" type="button" data-tab="tab-3" onclick="switchTab('tab-3')" class="bar-tab-btn w-full px-3 py-2.5 rounded-lg border border-transparent bg-obsidian/50 text-xs font-bold tracking-wide text-slate-300 hover:text-white hover:border-slate-700 transition flex items-center justify-center gap-2 text-center">
+          <span class="font-mono text-[11px] text-bourbon font-extrabold shrink-0">03</span>
+          <span class="truncate">Par Ordering & Price-Creep</span>
+          <span id="badge-pending-po" class="hidden px-1.5 py-0.5 rounded bg-crimson text-white font-mono text-[10px] font-extrabold shrink-0">0</span>
         </button>
-        <button id="nav-tab-4" type="button" data-tab="tab-4" onclick="switchTab('tab-4')" class="bar-tab-btn px-3.5 py-2 rounded-xl border border-titanium bg-gunmetal text-xs font-bold tracking-wide text-slate-300 hover:text-white transition flex items-center gap-2">
-          <span class="font-mono text-[11px] text-bourbon font-extrabold">04</span>
-          <span>0.1-Tenth Count, Water/RB & Citrus Sleeper</span>
+        <button id="nav-tab-4" type="button" data-tab="tab-4" onclick="switchTab('tab-4')" class="bar-tab-btn w-full px-3 py-2.5 rounded-lg border border-transparent bg-obsidian/50 text-xs font-bold tracking-wide text-slate-300 hover:text-white hover:border-slate-700 transition flex items-center justify-center gap-2 text-center">
+          <span class="font-mono text-[11px] text-bourbon font-extrabold shrink-0">04</span>
+          <span class="truncate">0.1-Tenth Count & Sleeper</span>
         </button>
-        <button id="nav-tab-5" type="button" data-tab="tab-5" onclick="switchTab('tab-5')" class="bar-tab-btn px-3.5 py-2 rounded-xl border border-titanium bg-gunmetal text-xs font-bold tracking-wide text-slate-300 hover:text-white transition flex items-center gap-2">
-          <span class="font-mono text-[11px] text-bourbon font-extrabold">05</span>
-          <span>Bar Labor, Bulk Importer & Guardrails</span>
+        <button id="nav-tab-5" type="button" data-tab="tab-5" onclick="switchTab('tab-5')" class="bar-tab-btn col-span-2 lg:col-span-1 w-full px-3 py-2.5 rounded-lg border border-transparent bg-obsidian/50 text-xs font-bold tracking-wide text-slate-300 hover:text-white hover:border-slate-700 transition flex items-center justify-center gap-2 text-center">
+          <span class="font-mono text-[11px] text-bourbon font-extrabold shrink-0">05</span>
+          <span class="truncate">Labor, Importer & Guardrails</span>
         </button>
       </div>
     </nav>
@@ -420,36 +400,35 @@
         </div>
       </div>
     </section>
-<!-- === END OF PART 1 === -->
-    <!-- ======================================================================= -->
+<!-- ======================================================================= -->
     <!-- TAB 2 — COCKTAIL R&D HUB, OWNER MARGIN APPROVAL QUEUE & LIVE POS PUSH   -->
     <!-- ======================================================================= -->
-    <section id="tab-2" class="bar-tab-panel hidden space-y-6">
-      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <!-- Left 5 Cols: Dual-Pricing SKU & Draft Yield Calculator + R&D Builder -->
-        <div class="xl:col-span-5 space-y-6">
-          <!-- Dual Pricing & Real Draft Math Quick Add / Edit SKU -->
-          <div class="carbon-card rounded-2xl p-5 space-y-4">
+    <section id="tab-2" class="bar-tab-panel hidden">
+      <!-- ROW 1: SYMMETRICAL BUILDER DECK (6 COLS SKU ENGINE | 6 COLS R&D BUILDER) -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+        <!-- Left (xl:col-span-6): Dual-Price SKU & Draft Yield Engine -->
+        <div class="xl:col-span-6 carbon-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-4">
             <div class="flex items-center justify-between border-b border-titanium pb-3">
               <div>
                 <h2 class="text-sm font-extrabold text-white uppercase tracking-wider">Dual-Price SKU & Draft Yield Engine</h2>
                 <p class="text-xs text-slate-400">Supports Standard Bar Pour ($) + VIP Bottle ($) + Keg Net Salable Oz</p>
               </div>
-              <span id="draft-yield-pill" class="px-2 py-0.5 rounded bg-bourbon/15 text-bourbon font-mono text-[10px] font-bold">92.0% KEG YIELD</span>
+              <span id="draft-yield-pill" class="px-2.5 py-1 rounded-lg bg-bourbon/15 text-bourbon font-mono text-[10px] font-bold shrink-0">92.0% KEG YIELD</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Brand / SKU Name *</label>
-                <input id="sku-brand-name" type="text" placeholder="Enter live brand or SKU" class="w-full carbon-input rounded-xl px-3 py-2 text-xs" />
+                <input id="sku-brand-name" type="text" placeholder="Enter live brand or SKU" class="w-full carbon-input rounded-lg px-3 py-2 text-xs" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">SKU Code (Optional)</label>
-                <input id="sku-code-input" type="text" placeholder="Auto if blank" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="sku-code-input" type="text" placeholder="Auto if blank" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">9-Bucket Category</label>
-                <select id="sku-category-bucket" onchange="recalcSkuPreview()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs">
+                <select id="sku-category-bucket" onchange="recalcSkuPreview()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs">
                   <option value="WELL_SPIRITS">Well Spirits</option>
                   <option value="CALL_TOP_SHELF">Call / Top-Shelf</option>
                   <option value="CRAFT_COCKTAILS">Craft Cocktails (Batch/Base)</option>
@@ -463,7 +442,7 @@
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Spirit / Beverage Family</label>
-                <select id="sku-spirit-family" class="w-full carbon-input rounded-xl px-3 py-2 text-xs">
+                <select id="sku-spirit-family" class="w-full carbon-input rounded-lg px-3 py-2 text-xs">
                   <option value="TEQUILA">Tequila / Mezcal</option>
                   <option value="VODKA">Vodka</option>
                   <option value="WHISKEY">Whiskey / Bourbon / Cognac</option>
@@ -476,7 +455,7 @@
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Storage Zone</label>
-                <select id="sku-storage-zone" class="w-full carbon-input rounded-xl px-3 py-2 text-xs">
+                <select id="sku-storage-zone" class="w-full carbon-input rounded-lg px-3 py-2 text-xs">
                   <option value="MAIN_WELL">Main Well</option>
                   <option value="BACK_BAR">Back Bar</option>
                   <option value="VIP_LIQUOR_CAGE">VIP Liquor Cage</option>
@@ -486,7 +465,7 @@
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Container Size</label>
-                <select id="sku-container-type" onchange="handleContainerTypeChange()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono">
+                <select id="sku-container-type" onchange="handleContainerTypeChange()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono">
                   <option value="750ML">750ml Bottle (25.36 oz)</option>
                   <option value="1L">1.0L Bottle (33.81 oz)</option>
                   <option value="1_75L">1.75L Handle (59.17 oz)</option>
@@ -499,42 +478,45 @@
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Unit Cost ($ / Bottle, Keg, Can)</label>
-                <input id="sku-unit-cost" type="number" step="0.01" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="sku-unit-cost" type="number" step="0.01" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Units Per Case & Par Units</label>
                 <div class="grid grid-cols-2 gap-2">
-                  <input id="sku-units-case" type="number" step="1" min="1" value="12" placeholder="Case Qty" class="w-full carbon-input rounded-xl px-2.5 py-2 text-xs font-mono" />
-                  <input id="sku-par-units" type="number" step="1" min="0" value="6" placeholder="Par Units" class="w-full carbon-input rounded-xl px-2.5 py-2 text-xs font-mono" />
+                  <input id="sku-units-case" type="number" step="1" min="1" value="12" placeholder="Case Qty" class="w-full carbon-input rounded-lg px-2.5 py-2 text-xs font-mono" />
+                  <input id="sku-par-units" type="number" step="1" min="0" value="6" placeholder="Par Units" class="w-full carbon-input rounded-lg px-2.5 py-2 text-xs font-mono" />
                 </div>
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Standard Pour Size (Oz)</label>
-                <input id="sku-pour-oz" type="number" step="0.25" min="0.25" value="1.50" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="sku-pour-oz" type="number" step="0.25" min="0.25" value="1.50" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Distributor / Vendor</label>
-                <input id="sku-vendor-name" type="text" placeholder="Distributor Name" class="w-full carbon-input rounded-xl px-3 py-2 text-xs" />
+                <input id="sku-vendor-name" type="text" placeholder="Distributor Name" class="w-full carbon-input rounded-lg px-3 py-2 text-xs" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-bourbon font-bold mb-1">Standard Bar Pour Price ($)</label>
-                <input id="sku-bar-price" type="number" step="0.25" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="sku-bar-price" type="number" step="0.25" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-bourbon font-bold mb-1">VIP Bottle Price ($)</label>
-                <input id="sku-vip-price" type="number" step="1" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="sku-vip-price" type="number" step="1" min="0" value="0" oninput="recalcSkuPreview()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
             </div>
+          </div>
 
-            <div id="sku-math-preview" class="rounded-xl bg-obsidian border border-titanium p-3 text-[11px] font-mono text-slate-300 space-y-1"></div>
-
-            <button type="button" onclick="saveLiquorSku()" class="w-full py-2.5 rounded-xl bg-bourbon hover:bg-amber-400 text-obsidian font-extrabold text-xs uppercase tracking-wider transition">
+          <div class="space-y-3 pt-2">
+            <div id="sku-math-preview" class="rounded-lg bg-obsidian border border-titanium p-3 text-[11px] font-mono text-slate-300 space-y-1"></div>
+            <button type="button" onclick="saveLiquorSku()" class="w-full py-2.5 rounded-lg bg-bourbon hover:bg-amber-400 text-obsidian font-extrabold text-xs uppercase tracking-wider transition">
               + Save / Update Dual-Price SKU in liquor_inventory
             </button>
           </div>
+        </div>
 
-          <!-- Bar Manager R&D Cocktail Spec Builder (`PIN-M` & `Owner`) -->
-          <div class="carbon-card rounded-2xl p-5 space-y-4">
+        <!-- Right (xl:col-span-6): Bar Manager Cocktail R&D Spec Builder -->
+        <div class="xl:col-span-6 carbon-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-4">
             <div class="border-b border-titanium pb-3">
               <h2 class="text-sm font-extrabold text-white uppercase tracking-wider">Bar Manager Cocktail R&D Spec Builder</h2>
               <p class="text-xs text-slate-400">Build down to <code class="text-bourbon">0.25 oz</code> + garnish/citrus unit cost + terminal spec card</p>
@@ -543,18 +525,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Cocktail / Drink Name *</label>
-                <input id="rnd-cocktail-name" type="text" placeholder="Signature Cocktail Name" class="w-full carbon-input rounded-xl px-3 py-2 text-xs" />
+                <input id="rnd-cocktail-name" type="text" placeholder="Signature Cocktail Name" class="w-full carbon-input rounded-lg px-3 py-2 text-xs" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-bourbon font-extrabold mb-1">POS Terminal Screen Target *</label>
-                <select id="rnd-pos-screen" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-bold text-bourbon">
+                <select id="rnd-pos-screen" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-bold text-bourbon">
                   <option value="SPEED_SCREEN">⚡ Speed Screen (SPEED_SCREEN)</option>
                   <option value="SPIRIT_SCREEN">🥃 Spirit Screen (SPIRIT_SCREEN)</option>
                 </select>
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Category Bucket</label>
-                <select id="rnd-category" onchange="recalcRndSpec()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs">
+                <select id="rnd-category" onchange="recalcRndSpec()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs">
                   <option value="CRAFT_COCKTAILS">Craft Cocktails</option>
                   <option value="WELL_SPIRITS">Well Spirits / Highball</option>
                   <option value="CALL_TOP_SHELF">Call / Top-Shelf</option>
@@ -566,12 +548,12 @@
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Exact Garnish / Citrus Cost ($)</label>
-                <input id="rnd-garnish-cost" type="number" step="0.05" min="0" value="0.25" oninput="recalcRndSpec()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="rnd-garnish-cost" type="number" step="0.05" min="0" value="0.25" oninput="recalcRndSpec()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
             </div>
 
             <!-- Ingredient Line Adder -->
-            <div class="rounded-xl bg-obsidian border border-titanium p-3 space-y-2.5">
+            <div class="rounded-lg bg-obsidian border border-titanium p-3 space-y-2.5">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Recipe Pour Lines (0.25 oz precision)</span>
                 <button type="button" onclick="addRndIngredientRow()" class="px-2.5 py-1 rounded-lg bg-gunmetal hover:bg-slatepanel border border-bourbon/40 text-bourbon text-[11px] font-bold">+ Add Line</button>
@@ -582,76 +564,77 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
               <div>
                 <label class="block text-[10px] uppercase text-bourbon font-bold mb-1">Proposed Bar Price ($)</label>
-                <input id="rnd-proposed-price" type="number" step="0.50" min="0" value="0" oninput="recalcRndSpec()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="rnd-proposed-price" type="number" step="0.50" min="0" value="0" oninput="recalcRndSpec()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">VIP / Pitcher Price ($)</label>
-                <input id="rnd-vip-price" type="number" step="1" min="0" value="0" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="rnd-vip-price" type="number" step="1" min="0" value="0" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Est. Popularity (1-100)</label>
-                <input id="rnd-popularity" type="number" step="5" min="1" max="100" value="75" oninput="recalcRndSpec()" class="w-full carbon-input rounded-xl px-3 py-2 text-xs font-mono" />
+                <input id="rnd-popularity" type="number" step="5" min="1" max="100" value="75" oninput="recalcRndSpec()" class="w-full carbon-input rounded-lg px-3 py-2 text-xs font-mono" />
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Glassware & Ice</label>
-                <input id="rnd-glass-ice" type="text" placeholder="Rocks Glass • King Cube" class="w-full carbon-input rounded-xl px-3 py-2 text-xs" />
+                <input id="rnd-glass-ice" type="text" placeholder="Rocks Glass • King Cube" class="w-full carbon-input rounded-lg px-3 py-2 text-xs" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Bartender POS Spec Card Notes</label>
-                <input id="rnd-prep-notes" type="text" placeholder="Hard shake 10s, double strain, expressed peel" class="w-full carbon-input rounded-xl px-3 py-2 text-xs" />
+                <input id="rnd-prep-notes" type="text" placeholder="Hard shake 10s, double strain, expressed peel" class="w-full carbon-input rounded-lg px-3 py-2 text-xs" />
               </div>
             </div>
+          </div>
 
-            <div id="rnd-live-calc-box" class="rounded-xl bg-obsidian border border-titanium p-3.5 text-xs font-mono space-y-1"></div>
-
-            <button type="button" onclick="submitCocktailSpecToOwner()" class="w-full py-2.5 rounded-xl bg-bourbon hover:bg-amber-400 text-obsidian font-extrabold text-xs uppercase tracking-wider transition shadow-lg shadow-bourbon/15">
+          <div class="space-y-3 pt-2">
+            <div id="rnd-live-calc-box" class="rounded-lg bg-obsidian border border-titanium p-3.5 text-xs font-mono space-y-1"></div>
+            <button type="button" onclick="submitCocktailSpecToOwner()" class="w-full py-2.5 rounded-lg bg-bourbon hover:bg-amber-400 text-obsidian font-extrabold text-xs uppercase tracking-wider transition shadow-lg shadow-bourbon/15">
               📤 Submit Recipe to Owner Approval Queue
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Right 7 Cols: Owner Margin Approval Queue + Live POS Menu Matrix -->
-        <div class="xl:col-span-7 space-y-6">
-          <!-- C-Suite R&D Menu Approval Queue -->
-          <div class="carbon-card rounded-2xl p-5 space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-titanium pb-3">
-              <div>
-                <h2 class="text-base font-extrabold text-white">C-Suite Cocktail Approval Queue & 1-Click Live POS Push</h2>
-                <p class="text-xs text-slate-400">Owner confirms <code class="text-bourbon">⚡ Speed Screen</code> vs <code class="text-bourbon">🥃 Spirit Screen</code> and pushes directly to <code class="text-emeraldVault">rehg-pos-core.menu_items</code>.</p>
-              </div>
-              <span id="rnd-queue-role-pill" class="px-2.5 py-1 rounded-lg bg-obsidian border border-bourbon/40 font-mono text-[11px] text-bourbon">OWNER GATE</span>
+      <!-- ROW 2: GOVERNANCE & CATALOG DECK (5 COLS APPROVAL QUEUE | 7 COLS LIVE SKU CATALOG) -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch mt-5">
+        <!-- Left (xl:col-span-5): C-Suite Cocktail Approval Queue & 1-Click Live POS Push -->
+        <div class="xl:col-span-5 carbon-card rounded-2xl p-5 flex flex-col space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-titanium pb-3">
+            <div>
+              <h2 class="text-base font-extrabold text-white">C-Suite Cocktail Approval Queue & 1-Click Live POS Push</h2>
+              <p class="text-xs text-slate-400">Owner confirms <code class="text-bourbon">⚡ Speed Screen</code> vs <code class="text-bourbon">🥃 Spirit Screen</code> and pushes directly to <code class="text-emeraldVault">rehg-pos-core.menu_items</code>.</p>
             </div>
-            <div id="rnd-approval-queue-list" class="space-y-3"></div>
+            <span id="rnd-queue-role-pill" class="px-2.5 py-1 rounded-lg bg-obsidian border border-bourbon/40 font-mono text-[11px] text-bourbon">OWNER GATE</span>
           </div>
+          <div id="rnd-approval-queue-list" class="space-y-3 flex-1 overflow-y-auto max-h-[460px] pr-1"></div>
+        </div>
 
-          <!-- Dual-Price Liquor & Keg Catalog + Menu Quadrant Matrix -->
-          <div class="carbon-card rounded-2xl p-5 space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-titanium pb-3">
-              <div>
-                <h3 class="text-sm font-extrabold text-white uppercase tracking-wider">Active Dual-Price Beverage SKU Catalog</h3>
-                <p class="text-xs text-slate-400">Live target prices recalculate automatically whenever Owner adjusts Bar / VIP Guardrail %</p>
-              </div>
-              <input id="catalog-search-input" type="text" oninput="renderTab2()" placeholder="Filter brand / zone..." class="carbon-input rounded-xl px-3 py-1.5 text-xs w-52" />
+        <!-- Right (xl:col-span-7): Active Dual-Price Beverage SKU Catalog -->
+        <div class="xl:col-span-7 carbon-card rounded-2xl p-5 flex flex-col space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-titanium pb-3">
+            <div>
+              <h3 class="text-sm font-extrabold text-white uppercase tracking-wider">Active Dual-Price Beverage SKU Catalog</h3>
+              <p class="text-xs text-slate-400">Live target prices recalculate automatically whenever Owner adjusts Bar / VIP Guardrail %</p>
             </div>
-            <div class="overflow-x-auto max-h-[420px]">
-              <table class="w-full text-left border-collapse text-xs">
-                <thead class="sticky top-0 bg-slatepanel">
-                  <tr class="border-b border-titanium text-[10px] uppercase tracking-wider text-slate-400">
-                    <th class="py-2 px-2.5">Brand / Zone</th>
-                    <th class="py-2 px-2.5">Size / Net Oz</th>
-                    <th class="py-2 px-2.5 text-right">Unit Cost</th>
-                    <th class="py-2 px-2.5 text-right">Bar Price / %</th>
-                    <th class="py-2 px-2.5 text-right">Target Bar $</th>
-                    <th class="py-2 px-2.5 text-right">VIP Price / %</th>
-                    <th class="py-2 px-2.5">Margin Status</th>
-                  </tr>
-                </thead>
-                <tbody id="sku-catalog-tbody" class="divide-y divide-titanium/50 font-mono"></tbody>
-              </table>
-            </div>
+            <input id="catalog-search-input" type="text" oninput="renderTab2()" placeholder="Filter brand / zone..." class="carbon-input rounded-lg px-3 py-1.5 text-xs w-52" />
+          </div>
+          <div class="overflow-x-auto flex-1 max-h-[460px]">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="sticky top-0 bg-slatepanel">
+                <tr class="border-b border-titanium text-[10px] uppercase tracking-wider text-slate-400">
+                  <th class="py-2 px-2.5">Brand / Zone</th>
+                  <th class="py-2 px-2.5">Size / Net Oz</th>
+                  <th class="py-2 px-2.5 text-right">Unit Cost</th>
+                  <th class="py-2 px-2.5 text-right">Bar Price / %</th>
+                  <th class="py-2 px-2.5 text-right">Target Bar $</th>
+                  <th class="py-2 px-2.5 text-right">VIP Price / %</th>
+                  <th class="py-2 px-2.5">Margin Status</th>
+                </tr>
+              </thead>
+              <tbody id="sku-catalog-tbody" class="divide-y divide-titanium/50 font-mono"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -1318,12 +1301,11 @@
     }
 
     // =========================================================================
-    // AUTOFILL-PROOF FULL-SCREEN PIN GATE & STRICT ROLE ISOLATION
+    // AUTOFILL-PROOF STEALTH PIN GATE & STRICT ROLE ISOLATION
     // =========================================================================
     function wipePinInputClean() {
       const inp = document.getElementById('gate-pin-input');
       if (inp) inp.value = '';
-      renderPinDots('');
     }
 
     function focusGatePinInput() {
@@ -1331,43 +1313,12 @@
       if (inp) inp.focus();
     }
 
-    function renderPinDots(val) {
-      const len = String(val || '').length;
-      for (let i = 0; i < 4; i++) {
-        const dot = document.getElementById('pin-dot-' + i);
-        if (!dot) continue;
-        if (i < len) {
-          dot.className = 'w-3.5 h-3.5 rounded-full bg-bourbon shadow-[0_0_12px_#D4AF37] scale-110 transition-all';
-        } else {
-          dot.className = 'w-3.5 h-3.5 rounded-full bg-titanium/60 transition-all';
-        }
-      }
-    }
-
     function handleGatePinInput(inputEl) {
       const digits = String(inputEl.value || '').replace(/\D/g, '').slice(0, 4);
       inputEl.value = digits;
-      renderPinDots(digits);
-      const errEl = document.getElementById('pin-error-msg');
-      if (errEl) errEl.style.opacity = '0';
       if (digits.length === 4) {
-        setTimeout(submitPinGate, 90);
+        submitPinGate();
       }
-    }
-
-    function pressPinDigit(d) {
-      const inp = document.getElementById('gate-pin-input');
-      if (!inp) return;
-      if (inp.value.length < 4) {
-        inp.value = inp.value + String(d);
-        handleGatePinInput(inp);
-      }
-    }
-
-    function clearPinDigits() {
-      wipePinInputClean();
-      const errEl = document.getElementById('pin-error-msg');
-      if (errEl) errEl.style.opacity = '0';
     }
 
     function submitPinGate() {
@@ -1384,14 +1335,25 @@
         unlockWithRole('MANAGER');
         return;
       }
-      const errEl = document.getElementById('pin-error-msg');
-      if (errEl) errEl.style.opacity = '1';
+
+      const pill = document.getElementById('stealth-pin-pill');
+      if (pill) {
+        pill.classList.remove('pin-pill-shake');
+        void pill.offsetWidth;
+        pill.classList.add('pin-pill-shake');
+        setTimeout(function () {
+          pill.classList.remove('pin-pill-shake');
+        }, 360);
+      }
       wipePinInputClean();
+      focusGatePinInput();
     }
 
     function unlockWithRole(roleName) {
       state.role = roleName;
       wipePinInputClean();
+      const inp = document.getElementById('gate-pin-input');
+      if (inp) inp.blur();
       const overlay = document.getElementById('pin-gate-overlay');
       if (overlay) overlay.classList.add('hidden');
       applyRoleIsolationUI();
@@ -1409,6 +1371,7 @@
       wipePinInputClean();
       const overlay = document.getElementById('pin-gate-overlay');
       if (overlay) overlay.classList.remove('hidden');
+      setTimeout(focusGatePinInput, 60);
     }
 
     function applyRoleIsolationUI() {
@@ -1417,10 +1380,10 @@
       if (badge) {
         if (isOwner) {
           badge.textContent = 'SOVEREIGN OWNER';
-          badge.className = 'ml-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-bourbon/20 text-bourbon border border-bourbon/50';
+          badge.className = 'ml-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-bourbon/20 text-bourbon border border-bourbon/50';
         } else {
           badge.textContent = 'BAR MANAGER (PIN-M)';
-          badge.className = 'ml-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-200 border border-titanium';
+          badge.className = 'ml-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-200 border border-titanium';
         }
       }
 
@@ -1548,12 +1511,12 @@
       const csvBanner = document.getElementById('csv-bridge-banner');
 
       if (mode === 'CARBON_POS_LIVE') {
-        if (liveBtn) liveBtn.className = 'px-3 py-1.5 rounded-lg text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow';
-        if (csvBtn) csvBtn.className = 'px-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white';
+        if (liveBtn) liveBtn.className = 'px-3 py-1.5 rounded-md text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow';
+        if (csvBtn) csvBtn.className = 'px-3 py-1.5 rounded-md text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white';
         if (csvBanner) csvBanner.classList.add('hidden');
       } else {
-        if (csvBtn) csvBtn.className = 'px-3 py-1.5 rounded-lg text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow';
-        if (liveBtn) liveBtn.className = 'px-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white';
+        if (csvBtn) csvBtn.className = 'px-3 py-1.5 rounded-md text-[11px] font-extrabold tracking-wide transition bg-bourbon text-obsidian shadow';
+        if (liveBtn) liveBtn.className = 'px-3 py-1.5 rounded-md text-[11px] font-bold tracking-wide transition text-slate-400 hover:text-white';
         if (csvBanner) csvBanner.classList.remove('hidden');
       }
       renderAllViews();
@@ -3523,6 +3486,7 @@
 
     window.addEventListener('DOMContentLoaded', function () {
       wipePinInputClean();
+      setTimeout(focusGatePinInput, 80);
       initPwaManifestAndInstall();
       populateVenueSelectors();
       setIngestionMode(state.ingestionMode);
